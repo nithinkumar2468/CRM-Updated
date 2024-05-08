@@ -2,8 +2,9 @@ package com.infinite.crm.controller;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.List;
 
+import io.reactivex.rxjava3.annotations.NonNull;
+import io.reactivex.rxjava3.core.Observable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,7 +27,8 @@ public class OrdersController {
 	private OrdersService service;
 	
 	@PostMapping("/{useremail}/order")
-	Orders newOrders(@PathVariable String useremail,@RequestBody OrdersDTO newOrders) {
+	@NonNull
+	Observable<Observable<Orders>> newOrders(@PathVariable String useremail, @RequestBody OrdersDTO newOrders) {
 		
 		LocalDateTime myDateObj = LocalDateTime.now();   
 	    DateTimeFormatter myFormatObj = DateTimeFormatter.ofPattern("dd MMM yyyy HH:mm a");  
@@ -34,12 +36,12 @@ public class OrdersController {
 	    String formattedDate = myDateObj.format(myFormatObj);  
 	    
 	    newOrders.setOrdereddate(formattedDate);
-		return service.addOrders(useremail,newOrders);
+		return Observable.fromCallable(()->service.addOrders(useremail,newOrders));
 	}
 	
 	@GetMapping("/{useremail}/orders")
-	List<OrdersDTO> getAllOrdersbyemail(@PathVariable String useremail) {
-		return service.findAllOrders(useremail);
+	Observable<OrdersDTO> getAllOrdersbyemail(@PathVariable String useremail) {
+		return Observable.fromIterable(service.findAllOrders(useremail));
 	}
 
 }

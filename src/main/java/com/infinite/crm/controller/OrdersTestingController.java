@@ -1,8 +1,9 @@
 package com.infinite.crm.controller;
 
 import java.time.LocalDate;
-import java.util.List;
 
+import io.reactivex.rxjava3.annotations.NonNull;
+import io.reactivex.rxjava3.core.Observable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,25 +27,28 @@ public class OrdersTestingController {
 	
 	
 	@PostMapping("/orderstesting")
-	OrdersTestingClass newOrders(@RequestBody OrdersTestingClass newOrder) {
+	@NonNull
+	Observable<Observable<OrdersTestingClass>> newOrders(@RequestBody OrdersTestingClass newOrder) {
 		LocalDate date = LocalDate.now();
 		newOrder.setOrderdate(date);
-		return service.addOrders(newOrder);
+		return Observable.fromCallable(()->service.addOrders(newOrder));
 	}
 
 	@GetMapping("/orderstesting")
-	List<OrdersTestingClass> getAllOrders() {
-		return service.findOrders();
+	Observable<OrdersTestingClass> getAllOrders() {
+		return Observable.fromIterable((Iterable<? extends OrdersTestingClass>) service.findOrders());
 	}
 
 	@GetMapping("/ordertesting/{id}")
-	OrdersTestingClass getOrdersById(@PathVariable int id) {
-		return service.findOrderbyId(id);
+	@NonNull
+	Observable<Observable<OrdersTestingClass>> getOrdersById(@PathVariable int id) {
+		return Observable.fromCallable(()->service.findOrderbyId(id));
 	}
 
 	@PutMapping("/ordertesting/{id}")
-	OrdersTestingClass updateOrders(@RequestBody OrdersTestingClass newOrder, @PathVariable int id) {
-		return service.updateOrder(id,newOrder);
+	@NonNull
+	Observable<Observable<OrdersTestingClass>> updateOrders(@RequestBody OrdersTestingClass newOrder, @PathVariable int id) {
+		return Observable.fromCallable(()->service.updateOrder(id,newOrder));
 	}
 
 }

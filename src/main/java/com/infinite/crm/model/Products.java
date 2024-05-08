@@ -6,9 +6,15 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name="products1")
+@AllArgsConstructor
+@Data
+@NoArgsConstructor
 public class Products { // products pojo
 
 	@Id
@@ -26,58 +32,4 @@ public class Products { // products pojo
 
 	@Column(name = "brand")
 	private String brand;
-
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-	public String getPname() {
-		return pname;
-	}
-
-	public void setPname(String pname) {
-		this.pname = pname;
-	}
-
-	public String getRating() {
-		return rating;
-	}
-
-	public void setRating(String rating) {
-		this.rating = rating;
-	}
-
-	public Long getPrice() {
-		return price;
-	}
-
-	public void setPrice(Long price) {
-		this.price = price;
-	}
-
-	public String getBrand() {
-		return brand;
-	}
-
-	public void setBrand(String brand) {
-		this.brand = brand;
-	}
-
-	public Products(Long id, String pname, String rating, Long price, String brand) {
-		super();
-		this.id = id;
-		this.pname = pname;
-		this.rating = rating;
-		this.price = price;
-		this.brand = brand;
-	}
-
-	public Products() {
-		super();
-	}
-	
 }

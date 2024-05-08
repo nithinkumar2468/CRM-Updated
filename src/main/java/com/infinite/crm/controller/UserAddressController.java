@@ -2,6 +2,7 @@ package com.infinite.crm.controller;
 
 import java.util.List;
 
+import io.reactivex.rxjava3.core.Observable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -25,20 +26,20 @@ public class UserAddressController {
 	private UserAddressService service;
 
 	@PostMapping("/{useremail}/address")
-	UserAddress newUserAddress(@PathVariable String useremail, @RequestBody UserAddressDTO newUser) {
-		return service.saveAddress(useremail, newUser);
+	Observable<UserAddress> newUserAddress(@PathVariable String useremail, @RequestBody UserAddressDTO newUser) {
+		return Observable.fromCallable(()->service.saveAddress(useremail, newUser));
 	}
 
 	@GetMapping("/{useremail}/addresses")
-	List<UserAddressDTO> getAllUserAddresses(@PathVariable String useremail) {
-		return service.findAllAddresses(useremail);
+	Observable<UserAddressDTO> getAllUserAddresses(@PathVariable String useremail) {
+		return Observable.fromIterable(service.findAllAddresses(useremail));
 
 	}
 	
 	@DeleteMapping("/address/{id}")
-	String deleteUserAddress(@PathVariable Long id) {
+	Observable<String> deleteUserAddress(@PathVariable Long id) {
 		service.deleteAddress(id);
-		return "User with Address " + id + " has been deleted success.";
+		return Observable.fromCallable(()->"User with Address " + id + " has been deleted success.");
 	}
 	
 }

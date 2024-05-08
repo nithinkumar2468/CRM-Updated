@@ -3,6 +3,7 @@ package com.infinite.crm.service;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import io.reactivex.rxjava3.core.Observable;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,7 +26,7 @@ public class OrdersService {
 	@Autowired
 	private ModelMapper modelMapper;
 
-	public Orders addOrders(String useremail, OrdersDTO newOrders) {
+	public Observable<Orders> addOrders(String useremail, OrdersDTO newOrders) {
 		User email = userRepo.findByEmail(useremail);
 		Orders newO = new Orders();
 		newO.setUsers(email);
@@ -33,7 +34,7 @@ public class OrdersService {
 		newO.setAddress(newOrders.getAddress());
 		newO.setTotalprice(newOrders.getTotalprice());
 		newO.setOrdereddate(newOrders.getOrdereddate());
-		return repo.save(newO);
+		return Observable.fromCallable(()->repo.save(newO));
 	}
 
 	public List<OrdersDTO> findAllOrders(String useremail) {

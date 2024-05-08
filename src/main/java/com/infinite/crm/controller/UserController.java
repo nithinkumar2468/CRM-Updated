@@ -2,6 +2,7 @@ package com.infinite.crm.controller;
 
 import java.util.List;
 
+import io.reactivex.rxjava3.core.Observable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -28,8 +29,8 @@ public class UserController {
 	private UserService userService;
 
 	@PostMapping("/user")
-	User newUser(@RequestBody User newUser) {
-		return userService.save(newUser);
+	Observable<User> newUser(@RequestBody User newUser) {
+		return Observable.fromCallable(()->userService.save(newUser));
 	}
 
 	@PostMapping(path = "/users/login")
@@ -49,14 +50,13 @@ public class UserController {
 	}
 
 	@GetMapping("/users")
-	List<User> getAllUsers() {
-		return userService.findAll();
-
+	Observable<User> getAllUsers() {
+		return Observable.fromIterable(userService.findAll());
 	}
 
 	@GetMapping("/user/{id}")
-	User getUserById(@PathVariable Long id) {
-		return userService.findById1(id);
+	Observable<User> getUserById(@PathVariable Long id) {
+		return Observable.fromCallable(()->userService.findById1(id));
 	}
 
 	/*
@@ -65,16 +65,16 @@ public class UserController {
 	 */
 
 	@PatchMapping("/user/{id}")
-	User updateUserMobileno(@RequestBody User newUser, @PathVariable Long id) {
-		return userService.findById3(id, newUser);
+	Observable<User> updateUserMobileno(@RequestBody User newUser, @PathVariable Long id) {
+		return Observable.fromCallable(()->userService.findById3(id, newUser));
 	}
 
 	@DeleteMapping("/user/{id}")
-	String deleteUser(@PathVariable Long id) {
+	Observable<String> deleteUser(@PathVariable Long id) {
 		if (!userService.existsById(id)) {
 			throw new UserNotFoundException(id);
 		}
 		userService.deleteById(id);
-		return "User with id " + id + " has been deleted success.";
+		return Observable.fromCallable(()->"User with id " + id + " has been deleted success.");
 	}
 }
