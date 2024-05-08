@@ -9,7 +9,6 @@ import jakarta.persistence.Table;
 @Entity
 @Table(name="task")
 public class Task {
-	
 	@Id
 	@GeneratedValue(strategy=GenerationType.SEQUENCE)
 	private int taskid;
@@ -48,7 +47,6 @@ public class Task {
 		this.number = number;
 		this.name = name;
 	}
-
 	public Task() {
 		super();
 	}

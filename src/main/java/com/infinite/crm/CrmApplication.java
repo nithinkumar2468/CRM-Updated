@@ -36,15 +36,12 @@ public class CrmApplication {
 			mailtouser();
 		}
 	}
-
-	
 	@Scheduled(cron = "0 */2 * ? * *")
 	@EventListener(ApplicationReadyEvent.class)
 	public void email() {
 		emailService.sendEmail("nithinkumarkodipaika@gmail.com", "Ticket is Pending to resolve",
 				"Please Resolve the ticket..!");
 	}
-
 	@Scheduled(cron = "0 */2 * ? * *")
 	@EventListener(ApplicationReadyEvent.class)
 	public void mailtouser() {

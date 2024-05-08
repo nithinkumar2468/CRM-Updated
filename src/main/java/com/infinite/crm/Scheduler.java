@@ -17,10 +17,8 @@ public class Scheduler {
 		}
 		
 	}
-	
 	@Autowired
-	private Email emailService;	
-	
+	private Email emailService;
 	@Scheduled(cron="0 */2 * ? * *")
 	@EventListener(ApplicationReadyEvent.class)
 	public void email(String s){
@@ -31,6 +29,5 @@ public class Scheduler {
 			emailService.sendEmail("nithinkumar0972@gmail.com", "Your Issue is Resolved..!", "Your issue has been resolved..!");
 		}
 	}
-
 }
 
