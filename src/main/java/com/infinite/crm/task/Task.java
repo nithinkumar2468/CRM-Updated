@@ -8,7 +8,7 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name="task")
-public class Task {
+public class Task {            //Task given  by murali sir
 	@Id
 	@GeneratedValue(strategy=GenerationType.SEQUENCE)
 	private int taskid;
