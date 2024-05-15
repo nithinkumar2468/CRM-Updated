@@ -14,7 +14,6 @@ public class Task {
 	private int taskid;
 	
 	private int number;
-
 	private String name;
 
 	public int getTaskid() {
