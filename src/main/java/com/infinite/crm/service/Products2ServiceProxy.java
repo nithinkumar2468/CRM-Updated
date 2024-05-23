@@ -18,4 +18,5 @@ public interface Products2ServiceProxy {
 
 	@GetMapping("/product2/{id}")
 	public Products getProductById(@PathVariable Long id);
+
 }
