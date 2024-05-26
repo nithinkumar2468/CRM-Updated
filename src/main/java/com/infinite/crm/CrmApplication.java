@@ -1,5 +1,9 @@
 package com.infinite.crm;
 
+import com.infinite.crm.model.Admin;
+import com.infinite.crm.repository.AdminRepository;
+import com.infinite.crm.repository.TicketRepository;
+import com.infinite.crm.repository.UserRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
@@ -15,38 +19,55 @@ import org.springframework.scheduling.annotation.Scheduled;
 import com.infinite.crm.model.Ticket;
 import com.infinite.crm.service.Email;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @SpringBootApplication
 @EnableScheduling
 @EnableFeignClients("com.infinite.crm")
 @EnableDiscoveryClient
 public class CrmApplication {
-	
-	
+
+
 	@Autowired
 	private Email emailService;
+
+	@Autowired
+	private UserRepository userRepo;
+
+	@Autowired
+	private TicketRepository ticketRepo;
+
+	@Autowired
+	private AdminRepository adminRepo;
 
 	public static void main(String[] args) {
 		SpringApplication.run(CrmApplication.class, args);
 	}
 
-	public void email(Ticket newT) {
-		if (newT.getStatus().equalsIgnoreCase("done")) {
-			email();
-		} else {
-			mailtouser();
+	@Scheduled(cron = "0 */2 * ? * *")
+	public void emailScheduler() {
+		List<Ticket> tickets = ticketRepo.findAll();
+
+		for (Ticket ticket : tickets) {
+			if (ticket.getStatus().equalsIgnoreCase("done")) {
+				if (ticket.getEmail() != null) {
+					emailService.sendEmail(ticket.getEmail(), "Your Issue is Resolved -- " + ticket.getTid(),
+							"Dear " + ticket.getUsername() + "," + '\n' + '\n'
+									+ "This is to notify you that your issue regarding " + ticket.getIssue()
+									+ " has been successfully Resolved..!" + '\n' + '\n' + "Regards," + '\n'
+									+ "admin-helpdesk");
+				}
+			} else if (ticket.getStatus().equalsIgnoreCase("active")) {
+				List<Admin> admins = adminRepo.findAll();
+				List<String> adminEmails = admins.stream().map(Admin::getEmail).collect(Collectors.toList());
+				emailService.sendEmailToMultipleRecipients(adminEmails,
+						"Ticket is Pending to resolve -- " + ticket.getTid(),
+						"Dear admin ," + '\n' + "Please Resolve the issue regarding " + ticket.getIssue() + " on "
+								+ ticket.getRaiseddate() + " by the mail-Id: " + ticket.getEmail() + '\n' + '\n'
+								+ "Regards," + '\n' + "capstone-crm");
+			}
 		}
-	}
-	@Scheduled(cron = "0 */2 * ? * *")
-	@EventListener(ApplicationReadyEvent.class)
-	public void email() {
-		emailService.sendEmail("nithinkumarkodipaika@gmail.com", "Ticket is Pending to resolve",
-				"Please Resolve the ticket..!");
-	}
-	@Scheduled(cron = "0 */2 * ? * *")
-	@EventListener(ApplicationReadyEvent.class)
-	public void mailtouser() {
-		emailService.sendEmail("nithinkumar0972@gmail.com", "Your Issue is Resolved..!",
-				"Your issue has been resolved..!");
 	}
 	
 	@Bean

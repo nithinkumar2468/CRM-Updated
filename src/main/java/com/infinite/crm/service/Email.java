@@ -7,6 +7,8 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class Email {
 	
@@ -18,13 +20,19 @@ public class Email {
     public void sendEmail(String toEmail, String subject, String body) {
         SimpleMailMessage mail = new SimpleMailMessage();
         mail.setTo(toEmail);
-        mail.setFrom("nithinkumarkodipyaka@gmail.com");
+        mail.setFrom("helpdesk.crm.info@gmail.com");
         mail.setText(body);
         mail.setSubject(subject);
 
         mailSender.send(mail);
 
         logger.info("Mail Sent Successfully");
+    }
+
+    public void sendEmailToMultipleRecipients(List<String> toEmails, String subject, String body) {
+        for (String email : toEmails) {
+            sendEmail(email, subject, body);
+        }
     }
 
 }
