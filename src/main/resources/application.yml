@@ -1,0 +1,44 @@
+currency-exchange-service:
+  ribbon:
+    eureka:
+      enabled: 'false'
+eureka:
+  client:
+    service-url:
+      default-zone: http://localhost:8761/eureka
+spring:
+  mail:
+    host: smtp.gmail.com
+    username: helpdesk.crm.info@gmail.com
+    port: '587'
+    properties:
+      mail:
+        smtp:
+          starttls:
+            enable: 'true'
+          auth: 'true'
+    password: aylbeldeogxukgpp
+  application:
+    name: crm-backend
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: 'true'
+  datasource:
+    password: root
+    username: postgres
+    url: jdbc:postgresql://localhost:5432/crm
+  cloud:
+    loadbalancer:
+      ribbon:
+        enabled: 'false'
+    config:
+      enabled: 'false'
+server:
+  port: '8080'
+
+
+
+#ZipkinDistributedtracing
+#management.tracing.sampling.probability=1.0
+#logging.pattern.level=%5p [${spring.application.name:},%X{traceId:-},%X{spanId:-}]

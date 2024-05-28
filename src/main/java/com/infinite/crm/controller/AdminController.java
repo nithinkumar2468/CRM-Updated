@@ -26,10 +26,10 @@ public class AdminController {
 
 	@PostMapping(path = "/admin/login")
 	public LoginMessage loginadmin(@RequestBody Admin admin) {
-		Admin email = adminService.findByEmail(admin.email());
+		Admin email = adminService.findByEmail(admin.getEmail());
 		if (email != null) {
-			String password = admin.password();
-			String userpass = email.password();
+			String password = admin.getPassword();
+			String userpass = email.getPassword();
 			if (password.matches(userpass)) {
 				return new LoginMessage("Login Success", true);
 			} else 
