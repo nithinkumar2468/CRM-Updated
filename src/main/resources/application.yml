@@ -1,7 +1,3 @@
-currency-exchange-service:
-  ribbon:
-    eureka:
-      enabled: 'false'
 eureka:
   client:
     service-url:
